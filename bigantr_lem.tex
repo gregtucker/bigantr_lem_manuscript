@@ -39,11 +39,56 @@
 
 \introduction
 
+This paper introduces a novel numerical model of fluvial landscape evolution. By computing the evolution over time of real or hypothetical terrain, numerical landscape evolution models (LEMs) help researchers visualize how different geomorphic processes, materials, and forcing factors give rise to observed topographic forms. LEMs serve, among things, as devices for studying the origins different landscapes. Given the diversity of processes and environments on earth, not to mention other bodies in the solar system, LEMs have been developed to explore a wide range of scales and processes; examples include soil creep, glacial erosion, landsliding, rill and gully erosion, groundwater, tidal network formation, and large-scale river network dynamics [REFS].
+
+The most common type of these models, sometimes called a \textit{fluvial landscape evolution model}, addresses erosional landscapes formed by a combination of fluvial and hillslope (gravitational) processes. A key ingredient in these models is the theoretical representation of stream erosion, transport, and deposition. Past treatments have ranged widely, with some emphasizing sediment transport \citep[e.g.,][]{willgoose1991coupled}, others emphasizing detachment of rock or similarly cohesive material \citep[e.g.,][]{howard1994detachment}, and still others representing a combination of effects [REFS]. 
+
+Fluvial LEMs have a demonstrated ability to capture key features of observed topography, such as the  dendritic drainage networks, concave-upward longitudinal stream profiles, migrating knickzones, and convex to quasi-planar hillslope profiles. On the other hand, there are other observations that the current generation of fluvial incision models encoded in LEMs cannot account for. One set of observations relates to the influence of coarse sediment carried by bedrock-incising channels. In a study of small (several square km) coastal drainages undergoing active rock uplift and fluvial incision, \citet{duvall2004tectonic} found a marked difference between channels with and without a supply of resistant sandstone clasts from the basin headwaters. The longitudinal profiles of channels supplied with these clasts were roughly twice as steep, and substantially more concave-upward, than channels whose basins lacked this material. \citet{johnson2009transport} reported similar findings from a very different field setting, the semi-arid landscape of the Henry Mountains region on the Colorado Plateau, USA, where channels are incising into Mesozoic sedimentary rocks. They compared two populations of channels. One group of channels had a source of diorite clasts from headwaters; measurements of tensile strength showed the diorite to be about 100x stronger than local sandstone bedrock. Diorite clasts were rare or absent in the second population of channels. Longitudinal profiles of  containing diorite clasts were consistently steeper and smoother than those of their diorite-poor counterparts, leading the authors to conclude that ``channel slope can be set mainly by sediment load rather than bedrock properties, despite long-term incision into bedrock.'' These two studies indicate that the flux, size, and hardness of gravel-sized sediment supplied from upstream can influence the gradient and profile shape of a bedrock-incising stream. Capturing this important effect in a mathematical model requires accounting for spatial variations in supply and/or hardness of coarse sediment. Although at least two LEMs have the ability to track multiple sediment sizes and allow these size fractions to vary in space (CAESAR, \citet{coulthard1996cellular}, and CHILD, \citet{tucker2001channel}), we are not aware of studies that have reproduced observations like those of \citet{duvall2004tectonic} and \citet{johnson2009transport} using a LEM.
+
+Another observed phenomenon not addressed in the previous generation of LEMs is the attrition of gravel-sized sediment due to abrasion and breakage. Laboratory studies have shown that pebble-sized sediment grains can lose anywhere from 0.1\% to $>10$\% of their mass for every kilometer of transport, depending on lithology \citep{attal2009pebble}. Studies of channel gravel in several rivers in the Nepal Himalaya reveal that the fluvial pebbles tend to be highly enriched in resistant lithologies such as quartzite, relative to the expected lithologic population that would be implied by the basin's bedrock geology \citep{attal2006changes,dingle2017}. These findings imply that attrition can effectively convert a substantial fraction of a river's gravel load into more easily transported sand-sized and finer material. Such an effect ought to influence the evolution of river networks and channel longitudinal profiles, but we are unaware of previous LEMs that incorporate gravel attrition.
+
+
+
+\citet{attal2006changes} showed that attrition can lead to a significant 
+
+
+
+%Such effects would not be captured by a detachment-limited model, such as the popular ``stream power'' formula for channel incision, which assumes that channel incision is dictated only by the local resistance to erosion and not by the quantity or characteristics of transported sediment. 
+
+
+.. such as what happens when you have hard stuff upstream of soft stuff, or how concavity seems to change as you go from A to B, or the enrichment of gravel in resistant material such as qtzite...
+
+...Nonetheless, given the long time scales involved and the need for computational efficiency, the representation of fluvial erosion, transport, and deposition is usually highly simplified. In particular, the role of bed sediment---including its influence on channel geometry, its tendency to either promote or dampen erosion of any underlying rock, and its downstream changes in flux, size, hardness---have received only limited attention.
+
+Recent theoretical work by Gabel et al.~(2024) has explored two processes in particular that have received scant attention in the past. The first is the progressive downstream loss of coarse (gravel-sized) sediment to abrasion and fragmentation, which we will refer to collectively as attrition. Research on steep drainage basins in the Himalayas has revealed that attrition can substantially reduce a river's load of gravel-sized sediment \citep{attal2006changes,dingle2017}. One implication of attrition is that all else equal, the fraction of coarse, hard-to-transport bed material should decline in the downstream direction. This principle seems to be borne out by measurements of bed and suspended load, which generally show a larger bed-load fraction in smaller basins [I AM MAKING THIS UP --- FIND SOME DATA!]. In fact, an insightful analysis by \citet{attal2006changes} demonstrated the possibility of a situation in which the rate of addition of coarse material is offset by the rate of attrition, such that gravel flux remains roughly constant even as water discharge and total sediment load grow downstream. In modeling this effect, \citet{gabel} found that attritional loss can have a substantial influence on stream profile gradient and concavity.
+
+...gasparini on sand and gravel, showing that fraction of gravel relative to sand can have a big impact...
+
+...related issue of survival of hardest, cite Alison P...
+
+...second process is width adjustment...
+
+...in this paper, we describe a fluvial landscape evolution code that implements the mathematical model of gabel...
+
+some questions related to scope, ie, what to include:
+\begin{itemize}
+    \item Multiple abrasion classes (yes)
+    \item Multiple bedload grain-size classes
+    \item Option for having both ``on''
+    \item Option for treating width empirically, ie deactivating near-threshold bit
+    \item Option for dynamic width, perhaps similar to Grace G's approach
+    \item Option for suspended sand and a S-G transition
+    \item NetworkModelGrid implementation
+    \item Separating hillslopes and channels
+    \item Option for a ``tracer'' version of abradability
+    \item Discrete event solver version
+\end{itemize}
 
 
 \section{Background}
 \label{sec:background}
 
+not sure whether this is needed; intro could contain relevant bknd
 
 \begin{figure}[h!]
 \centering
@@ -54,7 +99,44 @@
 
 
 
-\section{}
+\section{Theory for fluvial transport and bedrock incision}
+
+summarize the equations, referencing Gabel paper(s)
+
+\section{Numerical and code implementation}
+
+talk about numerical methods, and code structure
+
+\section{Test cases}
+
+1d tests vs various analytical solutions
+
+\section{Examples}
+
+\subsection{Uniform sediment strength}
+
+9 sensitivity experiments looking at U, gamma, beta, Kp, with spatially uniform beta
+
+\subsection{Variable sediment strength}
+
+one or more experiments using a mix of betas
+
+\subsection{Upstream source of resistant gravel}
+
+one or more experiments inspired by johnson, duvall, and schanz
+
+\section{Discussion}
+
+ways in which this theory extends or differs from previous models. like SP it includes an element of rock lowering related to hydraulic power, here represented as plucking. like SSP/ED/UC it explicitly calculates sediment transport, and like SPACE it represents a layer of sed over rock. captures cover effect. includes bedload abrasion, which relatively few models do. most novel elements: attrition of coarse sed, and dynamic width adjustment.
+
+consequences of dynamic width adjustment. where this is a limitation, and how to falsify it.
+
+
+
+
+\section{Conclusions}
+
+
 
 
 \codeavailability
@@ -72,4 +154,41 @@
 \bibliographystyle{copernicus}
 \bibliography{gt_library}
 
+\section*{NOTES}
+
+Basic dimensionless parameters:
+
+Uplift-runoff: $N_{ur} = U / I r$
+
+Width-abrasion: $N_{wa} = B\beta$
+
+Plucking efficiency: $K/\beta$ (or its inverse)
+
+Fraction coarse in rock: $\gamma$
+
+
+\subsection*{Experiments: analytical solution tests}
+
+\subsubsection*{Pencil catchment}
+
+For the special case of $\beta = 0$, sediment flux increases linearly with downstream distance, $x$:
+\begin{equation}
+    Q_s = K Q S^{7/6} \alpha I \gamma x
+\end{equation}
+In the case $\beta > 0$, it is a saturating exponential:
+\begin{equation}
+    Q_s = (1/\beta) K Q S^{7/6} \alpha I \gamma (1 - e^{-\beta x})
+\end{equation}
+
+
+
 \end{document}
+
+
+%LITERATURE NOTES:
+
+%Duvall 2004: "At a constant rock uplift rate, streams flowing from resistant to less resistant bedrock exhibit highly concave profiles and increased gradients along lower reaches relative to channels developed in uniform bedrock. These effects are interpreted as responses to (1) an increase in substrate resistance to channel incision in the upper reaches and (2) transport-limited gradients along lower reaches." Resistant Eocene ss versus weaker Olig-Plio ss, cg, sh. Schmidt ham: less res <10 - 35. more res 34-55. Weak rx in LUZ theta 0.48, LUZ strong above weak theta 0.92! HUZ theta 0.6, 0.53. ~2x steepness diff across ~6x U. LUZ channels consistently wider. In LUZ, channels with resistant ss in headwaters have ~2x ksn. "the [shear stress incision] model appears to be unable to explain the observed characteristics of channels traversing the transition in rock strength" Lithologically associated gradient contrast is as big as tectonic. "Although the search for a universal model of bedrock incision may be intellectually compelling, perhaps it is fundamentally misguided. Under- standing the range of behaviors exhibited by natural systems and the controls of these behaviors may prove to be a more worthy (and attainable) goal."
+
+%Johnson-Whipple2009: diorite ~100x stronger than Navaja SS. 4% bedrock exposed bed/banks of Trail Cyn (with diorite). taub/tauc ~ 6 for D50, so not NTT. taub/tauc~1-2 for D90. So NTT D90??
+
+
